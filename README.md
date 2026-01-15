@@ -2,6 +2,8 @@
 
 A production-ready **Retrieval-Augmented Generation (RAG)** server implementing the Model Context Protocol (MCP).
 
+**Benchmark Score: 855/1000 (A+)** - See [BENCHMARKS.md](BENCHMARKS.md)
+
 ## Features
 
 - **Hybrid Search**: Combines semantic embeddings with BM25 keyword search
