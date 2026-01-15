@@ -44,11 +44,19 @@ rag-server/
 ## Quick Start
 
 ```bash
-# Clone and run
-docker compose up
+# Clone the repository
+git clone https://github.com/kurt83340/RagPythonDemo.git
+cd RagPythonDemo
 
-# The MCP server will be available for integration
+# Create knowledge folder and add your documents
+mkdir -p knowledge
+cp your-docs/*.md knowledge/
+
+# Start the server
+docker compose up
 ```
+
+**See [USAGE.md](USAGE.md) for complete setup guide, document optimization tips, and examples.**
 
 ## MCP Tools
 
