@@ -1,0 +1,24 @@
+# Core
+chromadb>=0.4.0
+sentence-transformers>=2.2.0
+mcp>=1.0.0
+
+# Chunking
+langchain-text-splitters>=0.2.0
+tiktoken>=0.5.0
+
+# Reranking
+torch>=2.0.0
+
+# Hybrid Search (BM25)
+rank-bm25>=0.2.2
+
+# Auto-indexer (File watcher)
+watchdog>=3.0.0
+
+# PDF Support (optional - install if needed)
+pymupdf>=1.23.0
+# pypdf>=3.0.0  # Alternative to pymupdf
+
+# Utils
+numpy>=1.24.0

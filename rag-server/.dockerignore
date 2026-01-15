@@ -1,0 +1,11 @@
+# Ignore les dossiers montes en volumes
+models/
+db/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/

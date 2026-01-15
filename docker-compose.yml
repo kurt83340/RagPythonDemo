@@ -1,0 +1,18 @@
+services:
+  rag-server:
+    build:
+      context: ./rag-server
+      dockerfile: Dockerfile
+    container_name: rag-server
+    stdin_open: true
+    tty: true
+    volumes:
+      # Mount source code (no rebuild needed for .py changes)
+      - ./rag-server:/app
+      # Mount knowledge base (outside rag-server)
+      - ./knowledge:/app/knowledge
+    environment:
+      - HF_HOME=/app/models
+      - TRANSFORMERS_CACHE=/app/models
+      - SENTENCE_TRANSFORMERS_HOME=/app/models
+      - TORCH_HOME=/app/models
