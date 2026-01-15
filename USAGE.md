@@ -169,7 +169,184 @@ search(
 | `read_doc(file)` | Read entire file content |
 | `list_files(folder)` | List files in folder |
 
-## 5. Example Workflow
+## 5. Quick Test (Copy-Paste Examples)
+
+Test the RAG immediately with these sample files.
+
+### Step 1: Create test files
+
+**knowledge/api-docs.md**
+```markdown
+# REST API Documentation
+
+## Authentication
+
+All API requests require a Bearer token in the Authorization header.
+
+To obtain a token, call POST /auth/login with your credentials:
+- email: your registered email
+- password: your password
+
+The token expires after 24 hours.
+
+## Endpoints
+
+### GET /users
+Returns a list of all users. Requires admin role.
+
+Parameters:
+- limit (int): Maximum results (default: 50)
+- offset (int): Pagination offset
+
+### POST /users
+Creates a new user account.
+
+Required fields:
+- email: Valid email address
+- password: Minimum 8 characters
+- name: Display name
+
+### GET /products
+Returns product catalog.
+
+Query parameters:
+- category: Filter by category
+- min_price / max_price: Price range
+- sort: "price_asc", "price_desc", "newest"
+```
+
+**knowledge/architecture.md**
+```markdown
+# System Architecture
+
+## Tech Stack
+
+- **Backend**: Python FastAPI
+- **Database**: PostgreSQL 15
+- **Cache**: Redis 7
+- **Search**: Elasticsearch 8
+- **Queue**: RabbitMQ
+
+## Services
+
+### API Gateway
+Handles authentication, rate limiting, request routing.
+Port: 8000
+
+### User Service
+Manages user accounts, profiles, permissions.
+Port: 8001
+
+### Product Service
+Product catalog, inventory, pricing.
+Port: 8002
+
+### Order Service
+Shopping cart, checkout, order processing.
+Port: 8003
+
+## Database Schema
+
+Users table:
+- id (UUID, PK)
+- email (unique)
+- password_hash
+- created_at
+
+Products table:
+- id (UUID, PK)
+- name
+- price (decimal)
+- category_id (FK)
+```
+
+**knowledge/changelog.md**
+```markdown
+# Changelog
+
+## v2.1.0 - 2024-01-15
+
+### Added
+- PDF document support with header extraction
+- MMR diversity algorithm for search results
+- Semantic caching for faster repeated queries
+
+### Fixed
+- Memory leak in embedding model
+- Incorrect date parsing for European formats
+
+## v2.0.0 - 2024-01-01
+
+### Added
+- Hybrid search (vector + BM25)
+- Cross-encoder reranking
+- Multi-language support (EN/FR/ES)
+
+### Changed
+- Switched from FAISS to ChromaDB
+- New chunking strategy with header context
+
+## v1.0.0 - 2023-12-01
+
+### Added
+- Initial release
+- Basic semantic search
+- Markdown file indexing
+```
+
+### Step 2: Start and index
+
+```bash
+# Start server
+docker compose up -d
+
+# Wait for models to download (first time only)
+docker logs -f rag-server
+
+# Once ready, reindex via MCP
+reindex()
+```
+
+### Step 3: Test queries
+
+| Query | Expected Result |
+|-------|-----------------|
+| `search(query="authentication")` | Returns API auth docs + token info |
+| `search(query="database schema")` | Returns architecture with tables |
+| `search(query="what's new in v2.1")` | Returns changelog v2.1.0 section |
+| `search(query="POST endpoints")` | Returns POST /users from API docs |
+| `search(query="Redis")` | Returns tech stack section |
+
+### Step 4: Test advanced features
+
+```python
+# MMR diversity - get varied results
+search(query="API", use_mmr=True, mmr_lambda=0.5)
+
+# Filter by source
+search(query="added", source="changelog")
+
+# Boost recent content
+search(query="features", boost_recent=True)
+
+# Get related files
+get_related(file="architecture.md")
+```
+
+### Step 5: Test PDF (optional)
+
+Drop any PDF into `knowledge/` folder:
+```bash
+cp ~/Documents/manual.pdf knowledge/
+# Then reindex()
+```
+
+The PDF processor extracts:
+- Text content
+- Header hierarchy
+- Page numbers as metadata
+
+## 6. Example Workflow
 
 ```bash
 # 1. Start server
@@ -193,7 +370,7 @@ search(query="how to deploy")
 read_doc(file="projet/architecture.md")
 ```
 
-## 6. Performance Tips
+## 7. Performance Tips
 
 ### For Better Results
 
@@ -222,7 +399,7 @@ docker compose down -v
 docker compose up
 ```
 
-## 7. Troubleshooting
+## 8. Troubleshooting
 
 | Problem | Solution |
 |---------|----------|
